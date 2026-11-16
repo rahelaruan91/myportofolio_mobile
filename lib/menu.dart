@@ -25,12 +25,12 @@ class MyHomePage extends StatelessWidget {
     ),
     ItemHomepage(
       name: 'Tambah Proyek',
-      icon: Icons.folder_open,
+      icon: Icons.create_new_folder,
       color: Color.fromARGB(255, 157, 181, 63),
     ),
     ItemHomepage(
       name: 'Logout',
-      icon: Icons.folder_open,
+      icon: Icons.logout,
       color: Color.fromARGB(255, 200, 55, 55),
     ),
   ];
