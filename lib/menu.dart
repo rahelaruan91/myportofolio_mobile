@@ -14,13 +14,13 @@ class MyHomePage extends StatelessWidget {
       color: Colors.indigo,
     ),
     ItemHomepage(
-      name: 'Tambah Proyek',
-      icon: Icons.add_circle,
+      name: 'Pengalaman',
+      icon: Icons.work,
       color: Colors.teal,
     ),
     ItemHomepage(
-      name: 'Logout',
-      icon: Icons.logout,
+      name: 'Tentang Saya',
+      icon: Icons.person,
       color: Colors.deepOrange,
     ),
   ];
