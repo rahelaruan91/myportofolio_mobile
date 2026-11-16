@@ -23,6 +23,16 @@ class MyHomePage extends StatelessWidget {
       icon: Icons.person,
       color: Colors.deepOrange,
     ),
+    ItemHomepage(
+      name: 'Tambah Proyek',
+      icon: Icons.folder_open,
+      color: Color.fromARGB(255, 157, 181, 63),
+    ),
+    ItemHomepage(
+      name: 'Logout',
+      icon: Icons.folder_open,
+      color: Color.fromARGB(255, 200, 55, 55),
+    ),
   ];
 
   @override
