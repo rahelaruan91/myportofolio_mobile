@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -41,11 +42,18 @@ class MyHomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MyPortofolio'),
+        title: const Text(
+          'MyPortfolio',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
+      drawer: const LeftDrawer(),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
