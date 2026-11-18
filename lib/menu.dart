@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
+import 'package:myportofolio_mobile/project_form.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -102,6 +103,16 @@ class MyHomePage extends StatelessWidget {
                                 ),
                               ),
                             );
+                          // Navigate ke halaman yang sesuai
+                          if (item.name == "Tambah Proyek") {
+                            // TODO: Gunakan Navigator.push() untuk melakukan navigasi ke MaterialPageRoute yang mencakup ProjectFormPage
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProjectFormPage(),
+                              ),
+                            );
+                          }
                         },
                       );
                     }).toList(),
