@@ -12,18 +12,106 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
   final _formKey = GlobalKey<FormState>();
 
   String _projectName = "";
+  String _subheading = "";
   String _description = "";
-  String _category = "Web Development"; // default
-  String _technologies = "";
-  String _projectLink = "";
+  String _thumbnail = "";
+  String _projectUrl = "";
 
-  final List<String> _categories = [
-    'Web Development',
-    'Mobile Development',
-    'Machine Learning',
-    'Data Science',
-    'Other',
-  ];
+  String? _requiredTextValidator(
+    String? value,
+    String fieldName, {
+    int? maxLength,
+  }) {
+    final text = value?.trim() ?? '';
+
+    if (text.isEmpty) {
+      return '$fieldName tidak boleh kosong.';
+    }
+
+    if (maxLength != null && text.length > maxLength) {
+      return '$fieldName maksimal $maxLength karakter.';
+    }
+
+    return null;
+  }
+
+  String? _projectUrlValidator(String? value) {
+    final url = value?.trim() ?? '';
+
+    if (url.isEmpty) {
+      return 'Link proyek tidak boleh kosong.';
+    }
+
+    if (url.length > 200) {
+      return 'Link proyek maksimal 200 karakter.';
+    }
+
+    final uri = Uri.tryParse(url);
+    final isHttpUrl = uri != null &&
+        uri.hasScheme &&
+        ['http', 'https'].contains(uri.scheme.toLowerCase()) &&
+        uri.host.isNotEmpty;
+
+    if (!isHttpUrl) {
+      return 'Masukkan URL lengkap yang diawali http:// atau https://.';
+    }
+
+    return null;
+  }
+
+  void _showSummary() {
+    final formState = _formKey.currentState;
+
+    if (formState == null || !formState.validate()) {
+      return;
+    }
+
+    formState.save();
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Ringkasan Proyek'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Nama Proyek: $_projectName'),
+                const SizedBox(height: 8),
+                Text('Tagline Proyek: $_subheading'),
+                const SizedBox(height: 8),
+                Text('Deskripsi Proyek: $_description'),
+                const SizedBox(height: 8),
+                Text('Gambar Proyek: $_thumbnail'),
+                const SizedBox(height: 8),
+                Text('Link Proyek: $_projectUrl'),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                _formKey.currentState?.reset();
+
+                setState(() {
+                  _projectName = '';
+                  _subheading = '';
+                  _description = '';
+                  _thumbnail = '';
+                  _projectUrl = '';
+                });
+              },
+              child: const Text('Tutup'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +125,9 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
       ),
+
       drawer: const LeftDrawer(),
+
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -49,15 +139,15 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Nama Proyek",
                     labelText: "Nama Proyek",
+                    hintText: "Masukkan Nama Proyek",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _projectName = value!;
+                      _projectName = value?.trim() ?? '';
                     });
                   },
                   validator: (String? value) {
@@ -69,21 +159,47 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                 ),
               ),
               
-              // === Description ===
+              // === Subheading ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   maxLines: 5,
                   decoration: InputDecoration(
-                    hintText: "Deskripsi Proyek",
-                    labelText: "Deskripsi Proyek",
+                    labelText: "Tagline Proyek",
+                    hintText: "Masukkan Tagline Proyek",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _description = value!;
+                      _subheading = value?.trim() ?? '';
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Tagline proyek tidak boleh kosong!";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+
+              // === Deskripsi ===
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    labelText: "Deskripsi Proyek",
+                    hintText: "Masukkan Deskripsi Proyek",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _description = value?.trim() ?? '';
                     });
                   },
                   validator: (String? value) {
@@ -95,65 +211,64 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                 ),
               ),
 
-              // === Category ===
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: "Kategori Proyek",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  initialValue: _category,
-                  items: _categories
-                      .map((category) => DropdownMenuItem(
-                            value: category,
-                            child: Text(category),
-                          ))
-                      .toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _category = newValue!;
-                    });
-                  },
-                ),
-              ),
-
-              // === Technologies ===
+              // === Gambar Proyek ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Contoh: Flutter, Django, Figma",
-                    labelText: "Teknologi yang Digunakan",
+                    hintText: "Contoh: img/medivoice-preview.png",
+                    labelText: "Gambar Proyek",
+                    helperText: 'Masukkan path gambar seperti pada website.',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _technologies = value!;
+                      _thumbnail = value?.trim() ?? '';
                     });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Gambar proyek tidak boleh kosong!';
+                    }
+                    return null;
                   },
                 ),
               ),
 
-              // === Project Link ===
+              // === Link Proyek ===
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "URL Proyek (opsional)",
                     labelText: "Tautan Proyek",
+                    hintText: "https://contoh.com/proyek",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _projectLink = value!;
+                      _projectUrl = value?.trim() ?? '';
                     });
+                  },
+                  validator: (String? value) {
+                    final url = value?.trim() ?? '';
+
+                    if (url.isEmpty) {
+                      return 'Link proyek tidak boleh kosong!';
+                    }
+
+                    final uri = Uri.tryParse(url);
+                    if (uri == null ||
+                        !uri.hasScheme ||
+                        !['http', 'https'].contains(uri.scheme.toLowerCase()) ||
+                        uri.host.isEmpty) {
+                      return 'Masukkan URL lengkap yang diawali http:// atau https://.';
+                    }
+
+                    return null;
                   },
                 ),
               ),
@@ -180,11 +295,11 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Nama Proyek: $_projectName'),
+                                    Text('Tagline: $_description'),
                                     Text('Deskripsi: $_description'),
-                                    Text('Kategori: $_category'),
-                                    Text('Teknologi: $_technologies'),
+                                    Text('Gambar Proyek: $_thumbnail'),
                                     Text(
-                                      'Tautan: ${_projectLink.isEmpty ? "Belum diisi" : _projectLink}',
+                                      'Tautan: ${_projectUrl.isEmpty ? "Belum diisi" : _projectUrl}',
                                     ),
                                   ],
                                 ),
