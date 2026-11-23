@@ -11,14 +11,14 @@ class ExperienceFormPage extends StatefulWidget {
 class _ExperienceFormPageState extends State<ExperienceFormPage> {
   final _formKey = GlobalKey<FormState>();
 
-  static const List<String> _categories = [
-    'Internship',
-    'Research',
-    'Volunteer',
-    'Part-Time',
-    'Full-Time',
-    'Freelance',
-  ];
+  static const Map<String, String> _categories = {
+    'internship': 'Internship',
+    'research': 'Research',
+    'volunteer': 'Volunteer',
+    'part-time': 'Part-Time',
+    'full-time': 'Full-Time',
+    'freelance': 'Freelance',
+  };
 
   String _title = '';
   String _description = '';
@@ -70,7 +70,7 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                 const SizedBox(height: 8),
                 Text('Deskripsi: $_description'),
                 const SizedBox(height: 8),
-                Text('Kategori: $_category'),
+                Text('Kategori: ${_categories[_category] ?? _category}'),
                 const SizedBox(height: 8),
                 Text(
                   'Tanggal selesai: '
@@ -168,12 +168,13 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     labelText: 'Kategori pengalaman',
                     border: OutlineInputBorder(),
                   ),
-                  items: _categories.map((category) {
+                  items: _categories.entries.map((entry) {
                     return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
+                      value: entry.key,
+                      child: Text(entry.value),
                     );
                   }).toList(),
+                  onChanged: (_) {}, // Mengaktifkan dropdown
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Pilih kategori pengalaman.';
