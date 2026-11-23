@@ -1,9 +1,20 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
+import 'package:myportofolio_mobile/screens/experience_form.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
+
+  void _openForm(BuildContext context, Widget page) {
+    final navigator = Navigator.of(context);
+    navigator.pop(); // Tutup drawer
+    navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => page,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +67,13 @@ class LeftDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Add Project'),
-            // Navigasi ke halaman tambah proyek
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProjectFormPage(),
-                ),
-              );
-            },
+            onTap: ()  => _openForm(context, const ProjectFormPage()),
+            
+          ),
+          ListTile(
+            leading: const Icon(Icons.work_outline),
+            title: const Text('Add Experience'),
+            onTap: () => _openForm(context, const ExperienceFormPage()),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/widgets/project_card.dart';
+import 'package:myportofolio_mobile/screens/experience_form.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -99,9 +100,7 @@ class MyHomePage extends StatelessWidget {
                             ..hideCurrentSnackBar()
                             ..showSnackBar(
                               SnackBar(
-                                content: Text(
-                                  'Kamu telah menekan tombol ${item.name}!',
-                                ),
+                                content: Text('Kamu telah menekan tombol ${item.name}!',),
                               ),
                             );
                           // Navigate ke halaman yang sesuai
@@ -111,6 +110,14 @@ class MyHomePage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const ProjectFormPage(),
+                              ),
+                            );
+                          }
+                          if (item.name == "Tambah Pengalaman") {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ExperienceFormPage(),
                               ),
                             );
                           }
