@@ -1,8 +1,9 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/widgets/project_card.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
+import 'package:myportofolio_mobile/screens/project_list_screen.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -47,10 +48,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'MyPortfolio',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -78,10 +76,7 @@ class MyHomePage extends StatelessWidget {
                   const Text(
                     'Selamat datang di MyPortofolio Mobile!',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   GridView.count(
@@ -100,24 +95,38 @@ class MyHomePage extends StatelessWidget {
                             ..hideCurrentSnackBar()
                             ..showSnackBar(
                               SnackBar(
-                                content: Text('Kamu telah menekan tombol ${item.name}!',),
+                                content: Text(
+                                  'Kamu telah menekan tombol ${item.name}!',
+                                ),
                               ),
                             );
                           // Navigate ke halaman yang sesuai
-                          if (item.name == "Tambah Proyek") {
-                            // TODO: Gunakan Navigator.push() untuk melakukan navigasi ke MaterialPageRoute yang mencakup ProjectFormPage
+                          if (item.name == "Lihat Proyek") {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProjectListScreen(),
+                              ),
+                            );
+                          } else if (item.name == "Tambah Proyek") {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const ProjectFormPage(),
                               ),
                             );
-                          }
-                          if (item.name == "Tambah Pengalaman") {
+                          } else if (item.name == "Tambah Pengalaman") {
                             Navigator.push(
                               context,
                               MaterialPageRoute<void>(
-                                builder: (context) => const ExperienceFormPage(),
+                                builder: (context) =>
+                                    const ExperienceFormPage(),
+                              ),
+                            );
+                          } else if (item.name == 'Tentang Saya') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Menu Tentang Saya.'),
                               ),
                             );
                           }
@@ -139,17 +148,14 @@ class InfoCard extends StatelessWidget {
   final String title;
   final String content;
 
-  const InfoCard({
-    super.key,
-    required this.title,
-    required this.content,
-  });
+  const InfoCard({super.key, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final double cardWidth =
-        ((screenWidth - 56) / 3).clamp(48.0, 160.0).toDouble();
+    final double cardWidth = ((screenWidth - 56) / 3)
+        .clamp(48.0, 160.0)
+        .toDouble();
 
     return Card(
       elevation: 2,
@@ -165,10 +171,7 @@ class InfoCard extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              Text(
-                content,
-                textAlign: TextAlign.center,
-              ),
+              Text(content, textAlign: TextAlign.center),
             ],
           ),
         ),
